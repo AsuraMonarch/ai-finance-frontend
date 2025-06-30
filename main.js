@@ -64,13 +64,13 @@ async function handleAddTransaction() {
   alert(data.status || "Transaction added.");
 }
 async function loadReport() {
-  const token = localStorage.getItem("token"); // Or use your existing token variable
+  const token = localStorage.getItem("token") || token;
   if (!token) {
     alert("You must be logged in.");
     return;
   }
 
-  const response = await fetch('https://ai-finance-backend-zagr.onrender.com/transactions', {
+  const response = await fetch(`${API_URL}/transactions`, {
     headers: {
       'Authorization': `Bearer ${token}`
     }
