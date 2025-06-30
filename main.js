@@ -1,4 +1,4 @@
-const API_URL = 'https://ai-finance-backend-zagr.onrender.com/'; // Use your actual backend URL
+const API_URL = 'https://ai-finance-backend-1.onrender.com/'; // Use your actual backend URL
 let token = '';
 
 // Register handler
