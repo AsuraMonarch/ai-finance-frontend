@@ -187,7 +187,7 @@
         <p>Take control of your personal finance management with the help of advanced artificial intelligence.</p>
         <div class="buttons">
           <a href="#contact" class="btn primary">Get Started</a>
-          <a href="#login" class="btn primary" style="background: #fff; color: #0070f3; border: 1px solid #0070f3;">Login</a>
+         <a href="login.html" class="btn primary" style="background: #fff; color: #0070f3; border: 1px solid #0070f3;">Login</a>
 </div>
         </div>
       </div>
@@ -225,5 +225,21 @@
       </form>
     </section>
   </main>
+  <section id="loginForm" style="display: none; padding: 2rem; background: #fff; max-width: 400px; margin: 2rem auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+  <h2 style="text-align: center;">Login</h2>
+  <input type="email" id="loginEmail" placeholder="Email" style="width: 100%; padding: 0.5rem; margin: 1rem 0;">
+  <input type="password" id="loginPassword" placeholder="Password" style="width: 100%; padding: 0.5rem; margin: 1rem 0;">
+  <button onclick="handleLogin()" style="width: 100%; padding: 0.75rem; background: #0070f3; color: white; border: none; border-radius: 5px;">Login</button>
+  <button onclick="document.getElementById('loginForm').style.display='none'" style="float:right; background:none; border:none; font-size:1.2rem; color:#999;"></button>
+</section>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector('.btn[href="#login"]').addEventListener("click", (e) => {
+      e.preventDefault(); // Prevent jump
+      document.getElementById("loginForm").style.display = "block";
+      window.scrollTo({ top: document.getElementById("loginForm").offsetTop, behavior: "smooth" });
+    });
+  });
+</script>
 </body>
 </html>
