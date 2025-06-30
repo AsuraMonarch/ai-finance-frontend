@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up | AI Finance Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .signup-container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 420px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #0070f3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005bb5;
+    }
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: -0.3rem;
+      margin-bottom: 0.5rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <h2>Create Your Account</h2>
+    <input type="text" id="regName" placeholder="Full Name" required />
+    <input type="date" id="regDob" placeholder="Date of Birth" required />
+    <input type="email" id="regEmail" placeholder="Email" required />
+    <input type="password" id="regPassword" placeholder="Create Password" required />
+    <input type="password" id="regConfirmPassword" placeholder="Confirm Password" required />
+    <div class="error" id="passwordError">Passwords do not match.</div>
+    <button onclick="validateAndRegister()">Sign Up</button>
+  </div>
+
+  <script>
+    async function validateAndRegister() {
+      const fullName = document.getElementById('regName').value;
+      const dob = document.getElementById('regDob').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+      if (password !== confirmPassword) {
+        document.getElementById("passwordError").style.display = "block";
+        return;
+      } else {
+        document.getElementById("passwordError").style.display = "none";
+      }
+
+      // Send registration to backend
+      const res = await fetch('https://ai-finance-backend-1.onrender.com/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: fullName, dob, email, password })
+      });
+
+      const data = await res.json();
+      alert(data.msg || "Registration complete.");
+    }
+  </script>
+</body>
+</html>
