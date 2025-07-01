@@ -218,6 +218,14 @@
     <p>Visualize your income, expenses, and growth through clear reports.</p>
   </div>
 </a>
+<a href="budget.html" style="text-decoration: none; color: inherit;">
+  <div class="feature-card" id="budgetCard">
+    <div class="icon">💰</div>
+    <h3>Budget Summary</h3>
+    <p>You have spent: <strong id="spentAmount">Loading...</strong></p>
+    <p>You can still spend: <strong id="remainingAmount">Loading...</strong></p>
+  </div>
+</a>
     </section>
 
     <section id="contact" class="contact">
@@ -246,6 +254,44 @@
       window.scrollTo({ top: document.getElementById("loginForm").offsetTop, behavior: "smooth" });
     });
   });
+</script>
+<script>
+  const API_URL = 'https://ai-finance-assistant-muwh.onrender.com';
+  const WEEKLY_BUDGET = 47800; // Adjust as needed
+  const token = localStorage.getItem("token");
+
+  async function updateBudgetSummary() {
+    try {
+      const res = await fetch(`${API_URL}/transactions`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const transactions = await res.json();
+
+      // Filter this week’s transactions
+      const now = new Date();
+      const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())); // Sunday
+      let totalSpent = 0;
+
+      transactions.forEach(tx => {
+        const txDate = new Date(tx.date);
+        if (txDate >= startOfWeek) {
+          totalSpent += tx.amount;
+        }
+      });
+
+      const remaining = WEEKLY_BUDGET - totalSpent;
+
+      document.getElementById("spentAmount").textContent = `₦${totalSpent.toLocaleString()}`;
+      document.getElementById("remainingAmount").textContent = `₦${remaining.toLocaleString()}`;
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+      document.getElementById("spentAmount").textContent = "Error";
+      document.getElementById("remainingAmount").textContent = "Error";
+    }
+  }
+
+  // Run when page loads
+  document.addEventListener("DOMContentLoaded", updateBudgetSummary);
 </script>
 </body>
 </html>
