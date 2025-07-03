@@ -51,7 +51,7 @@ async function sendMessage(message) {
 
     setTimeout(() => {
       hideTyping();
-      addBotMessage(data.reply);
+      addBotMessage(data.message || data.reply || "⚠️ Couldn't understand the response.");;
     }, 1000);
   } catch (error) {
     hideTyping();
