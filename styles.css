@@ -39,3 +39,47 @@ input, textarea {
 }
 .page { display: none; }
 .page.active { display: block; }
+
+
+.typing {
+  font-style: italic;
+  color: gray;
+  margin: 10px;
+}
+
+.quick-replies {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 15px;
+}
+
+.quick-replies button {
+  padding: 8px 12px;
+  border: none;
+  background-color: #0077cc;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.quick-replies button:hover {
+  background-color: #005fa3;
+}
+
+.user-message {
+  background-color: #DCF8C6;
+  padding: 8px;
+  margin: 5px;
+  border-radius: 8px;
+  text-align: right;
+}
+
+.bot-message {
+  background-color: #F1F0F0;
+  padding: 8px;
+  margin: 5px;
+  border-radius: 8px;
+  text-align: left;
+}
