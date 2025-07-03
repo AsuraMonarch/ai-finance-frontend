@@ -42,7 +42,7 @@ async function sendMessage(message) {
   showTyping();
 
   try {
-    const res = await fetch('https://ai-finance-backend-secure.onrender.com', {
+    const res = await fetch('https://ai-finance-backend-secure.onrender.com/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message })
