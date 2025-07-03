@@ -41,45 +41,69 @@ input, textarea {
 .page.active { display: block; }
 
 
-.typing {
-  font-style: italic;
-  color: gray;
-  margin: 10px;
+/* === Dark Mode Support === */
+body.dark-mode {
+  background-color: #121212;
+  color: #f1f1f1;
 }
 
-.quick-replies {
+body.dark-mode .bot-message {
+  background-color: #2a2a2a;
+  color: #f1f1f1;
+}
+
+body.dark-mode .user-message {
+  background-color: #045d56;
+  color: #ffffff;
+}
+
+body.dark-mode .quick-replies button {
+  background-color: #333;
+  color: #fff;
+}
+
+body.dark-mode .quick-replies button:hover {
+  background-color: #444;
+}
+
+/* Toggle Switch */
+.theme-toggle {
+  position: absolute;
+  top: 10px;
+  right: 20px;
   display: flex;
+  align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
-  margin: 15px;
 }
 
-.quick-replies button {
-  padding: 8px 12px;
-  border: none;
-  background-color: #0077cc;
-  color: white;
-  border-radius: 6px;
+.theme-toggle input[type="checkbox"] {
+  width: 40px;
+  height: 20px;
+  -webkit-appearance: none;
+  background-color: #ccc;
+  outline: none;
+  border-radius: 20px;
+  position: relative;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
 }
 
-.quick-replies button:hover {
-  background-color: #005fa3;
+.theme-toggle input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  top: 1px;
+  left: 1px;
+  background-color: #fff;
+  transition: transform 0.3s;
 }
 
-.user-message {
-  background-color: #DCF8C6;
-  padding: 8px;
-  margin: 5px;
-  border-radius: 8px;
-  text-align: right;
+.theme-toggle input[type="checkbox"]:checked {
+  background-color: #0077cc;
 }
 
-.bot-message {
-  background-color: #F1F0F0;
-  padding: 8px;
-  margin: 5px;
-  border-radius: 8px;
-  text-align: left;
+.theme-toggle input[type="checkbox"]:checked::before {
+  transform: translateX(20px);
 }
