@@ -47,11 +47,6 @@
   </style>
 </head>
 <body>
-  <div class="theme-toggle">
-    <label for="themeSwitch">Dark Mode</label>
-    <input type="checkbox" id="themeSwitch" />
-  </div>
-
   <div class="chat-container">
     <h2>💬 AI Finance Assistant</h2>
     <div id="chat-box"></div>
@@ -87,13 +82,8 @@
     }
   </script>
 
-  <div style="margin: 20px;">
-    <h3>💹 Budget Insights</h3>
-    <canvas id="budgetChart" width="400" height="200"></canvas>
-  </div>
-
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <div id="quick-replies" class="quick-replies"></div>
+  <script src="main.js"></script>
 </body>
 
 </html>
