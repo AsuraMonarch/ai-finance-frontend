@@ -1,72 +1,80 @@
-
 window.onload = () => {
-  addBotMessage("👋 Hi! I'm your AI Finance Assistant. How can I help you today?");
-  addQuickReplies();
+  greetUser();
+  renderQuickReplies();
+};
+
+function greetUser() {
+  appendBotMessage("👋 Hi! I'm your AI Finance Assistant. How can I help you today?");
 }
 
-function addUserMessage(message) {
+function renderQuickReplies() {
+  const container = document.getElementById("quick-replies");
+  const suggestions = ["How’s my budget?", "Show my spending", "Set a goal"];
+
+  container.innerHTML = "";
+  suggestions.forEach(text => {
+    const btn = document.createElement("button");
+    btn.textContent = text;
+    btn.addEventListener("click", () => handleUserInput(text));
+    container.appendChild(btn);
+  });
+}
+
+function handleUserInput(message) {
+  appendUserMessage(message);
+  showTypingIndicator();
+  sendMessageToBot(message);
+}
+
+function appendUserMessage(text) {
+  appendMessage(text, "user-message");
+}
+
+function appendBotMessage(text) {
+  appendMessage(text, "bot-message");
+}
+
+function appendMessage(text, className) {
   const chatBox = document.getElementById("chat-box");
   const msg = document.createElement("div");
-  msg.className = "user-message";
-  msg.innerText = message;
+  msg.className = className;
+  msg.textContent = text;
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function addBotMessage(message) {
-  const chatBox = document.getElementById("chat-box");
-  const msg = document.createElement("div");
-  msg.className = "bot-message";
-  msg.innerText = message;
-  chatBox.appendChild(msg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function showTyping() {
+function showTypingIndicator() {
   const chatBox = document.getElementById("chat-box");
   const typing = document.createElement("div");
-  typing.className = "typing";
-  typing.innerText = "AI Assistant is typing...";
   typing.id = "typing-indicator";
+  typing.className = "typing";
+  typing.textContent = "AI Assistant is typing...";
   chatBox.appendChild(typing);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-function hideTyping() {
+function hideTypingIndicator() {
   const typing = document.getElementById("typing-indicator");
   if (typing) typing.remove();
 }
 
-async function sendMessage(message) {
-  addUserMessage(message);
-  showTyping();
-
+async function sendMessageToBot(message) {
   try {
-    const res = await fetch('https://ai-finance-backend-secure.onrender.com/chat', {
+    const response = await fetch('https://ai-finance-backend-secure.onrender.com/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message })
     });
-    const data = await res.json();
+
+    const data = await response.json();
 
     setTimeout(() => {
-      hideTyping();
-      addBotMessage(data.message || data.reply || "⚠️ Couldn't understand the response.");;
+      hideTypingIndicator();
+      appendBotMessage(data.message || data.reply || "⚠️ Sorry, I didn’t get that.");
     }, 1000);
   } catch (error) {
-    hideTyping();
-    addBotMessage("⚠️ Oops, couldn't connect to the server.");
+    hideTypingIndicator();
+    appendBotMessage("⚠️ Unable to connect. Please try again later.");
+    console.error("Error sending message:", error);
   }
-}
-
-function addQuickReplies() {
-  const container = document.getElementById("quick-replies");
-  const suggestions = ["How’s my budget?", "Show my spending", "Set a goal"];
-  container.innerHTML = "";
-  suggestions.forEach(text => {
-    const btn = document.createElement("button");
-    btn.innerText = text;
-    btn.onclick = () => sendMessage(text);
-    container.appendChild(btn);
-  });
 }
