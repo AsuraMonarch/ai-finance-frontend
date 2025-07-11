@@ -3,94 +3,126 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sign Up | AI Finance Assistant</title>
+  <title>Sign Up - AI Finance Assistant</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f4f8;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .signup-container {
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 400px;
       background: #fff;
+      margin: 5rem auto;
       padding: 2rem;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 420px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     h2 {
       text-align: center;
       margin-bottom: 1.5rem;
+      color: #081c4c;
     }
     input {
       width: 100%;
       padding: 0.75rem;
-      margin: 0.5rem 0;
+      margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 5px;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      border-color: #0070f3;
+      outline: none;
     }
     button {
       width: 100%;
       padding: 0.75rem;
       background: #0070f3;
-      color: white;
+      color: #fff;
       border: none;
       border-radius: 5px;
-      margin-top: 1rem;
       cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
     }
     button:hover {
       background: #005bb5;
     }
-    .error {
-      color: red;
-      font-size: 0.9rem;
-      margin-top: -0.3rem;
-      margin-bottom: 0.5rem;
-      display: none;
+    p.login-link {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    p.login-link a {
+      color: #0070f3;
+      text-decoration: none;
+    }
+    p.login-link a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <div class="signup-container">
+  <div class="container">
     <h2>Create Your Account</h2>
-    <input type="text" id="regName" placeholder="Full Name" required />
-    <input type="date" id="regDob" placeholder="Date of Birth" required />
-    <input type="email" id="regEmail" placeholder="Email" required />
-    <input type="password" id="regPassword" placeholder="Create Password" required />
-    <input type="password" id="regConfirmPassword" placeholder="Confirm Password" required />
-    <div class="error" id="passwordError">Passwords do not match.</div>
-    <button onclick="validateAndRegister()">Sign Up</button>
+    <form id="signupForm">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="date" id="dob" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+      <button type="submit">Sign Up</button>
+    </form>
+    <p class="login-link">Already have an account? <a href="login.html">Login here</a></p>
   </div>
 
   <script>
-    async function validateAndRegister() {
-      const fullName = document.getElementById('regName').value;
-      const dob = document.getElementById('regDob').value;
-      const email = document.getElementById('regEmail').value;
-      const password = document.getElementById('regPassword').value;
-      const confirmPassword = document.getElementById('regConfirmPassword').value;
+    const API_URL = 'https://ai-finance-backend-secure.onrender.com';
+
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const dob = document.getElementById("dob").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
 
       if (password !== confirmPassword) {
-        document.getElementById("passwordError").style.display = "block";
+        alert("Passwords do not match.");
         return;
-      } else {
-        document.getElementById("passwordError").style.display = "none";
       }
 
-      // Send registration to backend
-      const res = await fetch('https://ai-finance-backend-1.onrender.com/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: fullName, dob, email, password })
-      });
+      try {
+        const res = await fetch(`${API_URL}/signup`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ name, dob, email, password })
+        });
 
-      const data = await res.json();
-      alert(data.msg || "Registration complete.");
-    }
+        if (!res.ok) {
+          const errorData = await res.json();
+          alert("Sign up failed: " + (errorData.message || "Unknown error"));
+          return;
+        }
+
+        const data = await res.json();
+        localStorage.setItem("token", data.token);
+
+        // ✅ Redirect to dashboard/home
+        window.location.href = "index.html";
+
+      } catch (err) {
+        console.error(err);
+        alert("Error signing up. Please try again.");
+      }
+    });
   </script>
 </body>
 </html>

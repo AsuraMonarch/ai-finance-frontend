@@ -5,40 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login - AI Finance Assistant</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #f9f9f9;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      color: #333;
+      line-height: 1.6;
     }
-
-    .login-container {
+    .container {
+      max-width: 400px;
       background: #fff;
+      margin: 5rem auto;
       padding: 2rem;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
-    .login-container h2 {
+    h2 {
       text-align: center;
       margin-bottom: 1.5rem;
       color: #081c4c;
     }
-
-    .login-container input {
+    input {
       width: 100%;
       padding: 0.75rem;
       margin-bottom: 1rem;
       border: 1px solid #ccc;
       border-radius: 5px;
+      transition: border-color 0.3s;
     }
-
-    .login-container button {
+    input:focus {
+      border-color: #0070f3;
+      outline: none;
+    }
+    button {
       width: 100%;
       padding: 0.75rem;
       background: #0070f3;
@@ -49,35 +52,66 @@
       font-size: 1rem;
       transition: background 0.3s;
     }
-
-    .login-container button:hover {
+    button:hover {
       background: #005bb5;
     }
-
-    .back-link {
-      display: block;
+    p.signup-link {
       text-align: center;
       margin-top: 1rem;
+    }
+    p.signup-link a {
       color: #0070f3;
       text-decoration: none;
     }
-
-    .back-link:hover {
+    p.signup-link a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
-
-  <div class="login-container">
+  <div class="container">
     <h2>Login to Your Account</h2>
-    <form action="#" method="POST">
-      <input type="email" name="email" placeholder="Email Address" required />
-      <input type="password" name="password" placeholder="Password" required />
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
       <button type="submit">Login</button>
     </form>
-    <a class="back-link" href="index.html">← Back to Home</a>
+    <p class="signup-link">Don't have an account? <a href="signup.html">Sign up here</a></p>
   </div>
 
+  <script>
+    const API_URL = 'https://ai-finance-backend-secure.onrender.com';
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const res = await fetch(`${API_URL}/login`, {
+          method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ email, password })
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          alert("Login failed: " + (errorData.message || "Invalid credentials"));
+          return;
+        }
+
+        const data = await res.json();
+        localStorage.setItem("token", data.token);
+
+        // ✅ Redirect to dashboard/home
+        window.location.href = "index.html";
+
+      } catch (err) {
+        console.error(err);
+        alert("Error logging in. Please try again.");
+      }
+    });
+  </script>
 </body>
 </html>

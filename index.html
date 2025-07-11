@@ -182,6 +182,7 @@
       <ul class="nav-links">
         <li><a href="#">Home</a></li>
         <li><a href="#contact">Contact</a></li>
+        <li><a href="#" onclick="logout()">Logout</a></li>
       </ul>
     </nav>
   </header>
@@ -260,6 +261,11 @@
   <button onclick="document.getElementById('loginForm').style.display='none'" style="float:right; background:none; border:none; font-size:1.2rem; color:#999;"></button>
 </section>
 <script>
+  if (!localStorage.getItem("token")) {
+    window.location.href = "login.html";
+  }
+</script>
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelector('.btn[href="#login"]').addEventListener("click", (e) => {
       e.preventDefault(); // Prevent jump
@@ -305,6 +311,12 @@
 
   // Run when page loads
   document.addEventListener("DOMContentLoaded", updateBudgetSummary);
+</script>
+<script>
+  function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+  }
 </script>
 </body>
 </html>
