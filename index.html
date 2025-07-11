@@ -85,42 +85,48 @@
  <script>
   const API_URL = 'https://ai-finance-backend-secure.onrender.com';
 
- document.getElementById("signupForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+  document.getElementById("signupForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const confirmPassword = document.getElementById("confirmPassword").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const confirmPassword = document.getElementById("confirmPassword").value.trim();
 
-  if (password !== confirmPassword) {
-    alert("Passwords do not match.");
-    return;
-  }
-
-  try {
-    const res = await fetch("https://ai-finance-backend-secure.onrender.com/signup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: email,
-        password: password
-      })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert("❌ Sign up failed: " + (data.error || "Unknown error"));
+    // ✅ Validate required fields BEFORE sending the request
+    if (!email || !password || !confirmPassword) {
+      alert("Please fill in all required fields.");
       return;
     }
 
-    localStorage.setItem("token", data.token);
-    window.location.href = "index.html";
-  } catch (err) {
-    console.error(err);
-    alert("⚠️ Error signing up. Please try again.");
-  }
-});
+    // ✅ Validate password match
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_URL}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: email, password: password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert("❌ Sign up failed: " + (data.error || "Unknown error"));
+        return;
+      }
+
+      // ✅ Store token and redirect
+      localStorage.setItem("token", data.token);
+      window.location.href = "index.html";
+
+    } catch (err) {
+      console.error(err);
+      alert("⚠️ Error signing up. Please try again.");
+    }
+  });
 </script>
 </body>
 </html>
