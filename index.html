@@ -86,13 +86,13 @@
       border-radius: 10px;
     }
 
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 2rem;
-      margin: 3rem 2rem;
-    }
+ .features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch; /* This line is key */
+  gap: 2rem;
+}
     .feature-card {
   background: #fff;
   padding: 2rem;
@@ -228,8 +228,8 @@
   <div class="feature-card" id="budgetCard">
     <div class="icon">💰</div>
     <h3>Budget Summary</h3>
-    <p>You have spent: <strong id="spentAmount">Loading...</strong></p>
-    <p>You can still spend: <strong id="remainingAmount">Loading...</strong></p>
+    <p>You have spent: <strong id="spentAmount">₦0</strong></p>
+<p>You can still spend: <strong id="remainingAmount">₦0</strong></p>
   </div>
 </a>
 <a href="chat.html" style="text-decoration: none; color: inherit;">
