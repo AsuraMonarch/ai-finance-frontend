@@ -290,9 +290,7 @@ if (!localStorage.getItem("token")) {
 
   async function updateBudgetSummary() {
     try {
-      const res = await fetch(`${API_URL}/transactions`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await fetch(`${API_URL}/transactions`,);
       const transactions = await res.json();
 
       // Filter this week’s transactions
