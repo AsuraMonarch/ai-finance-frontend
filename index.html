@@ -101,11 +101,15 @@
 
       try {
         const res = await fetch(`${API_URL}/signup`, {
-          method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ username: email, password })
-        });
-
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    name,
+    dob,
+    email,
+    password
+  })
+});
         if (!res.ok) {
           const errorData = await res.json();
           alert("Sign up failed: " + (errorData.message || "Unknown error"));
