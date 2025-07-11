@@ -323,29 +323,5 @@ if (!localStorage.getItem("token")) {
     window.location.href = "login.html";
   }
 </script>
-<script>
-  async function loadProfile() {
-    try {
-      const res = await fetch(`${API_URL}/profile`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
-      if (!res.ok) {
-        throw new Error("Unauthorized");
-      }
-
-      const data = await res.json();
-      document.getElementById("greeting").textContent = `Hello, ${data.username}!`;
-    } catch (err) {
-      console.error(err);
-      localStorage.removeItem("token");
-      window.location.href = "login.html";
-    }
-  }
-
-  document.addEventListener("DOMContentLoaded", loadProfile);
-</script>
 </body>
 </html>
