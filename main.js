@@ -87,47 +87,28 @@ async function sendMessageToBot(message) {
 }
 
 // ✅ Check admin access on load (used in login.html)
+function parseJwt(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+}
+
 function checkAdminAccessOnLoad() {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  fetch("https://ai-finance-backend-secure.onrender.com/admin/data", {
-    method: "GET",
-    headers: {
-      "Authorization": token
-    }
-  })
-  .then(res => {
-    if (res.ok) {
-      // ✅ Redirect to admin dashboard
-      window.location.href = "admin.html";
-    } else {
-      console.log("✅ Regular user logged in.");
-    }
-  })
-  .catch(err => {
-    console.error("Admin check failed:", err);
-  });
-}
-
-// ✅ Explicit admin access check (can be used in admin menu button)
-function checkAdminAccess() {
-  fetch("https://ai-finance-backend-secure.onrender.com/admin/data", {
-    method: "GET",
-    headers: {
-      "Authorization": localStorage.getItem("token")
-    }
-  })
-  .then(response => {
-    if (response.ok) {
-      // ✅ User is admin
-      window.location.href = "admin.html";
-    } else {
-      alert("❌ You are not authorized to access the admin dashboard.");
-    }
-  })
-  .catch(err => {
-    console.error("⚠️ Admin access error:", err);
-    alert("⚠️ Something went wrong while checking admin access.");
-  });
+  const payload = parseJwt(token);
+  if (payload && payload.role === "admin") {
+    // ✅ Token says user is admin
+    window.location.href = "admin.html";
+  } else {
+    console.log("✅ Logged in as regular user.");
+  }
 }
