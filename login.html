@@ -104,19 +104,12 @@
         const data = await res.json();
         localStorage.setItem("token", data.token);
 
-        // Check if the user is an admin
-        const adminCheck = await fetch(`${API_URL}/admin/data`, {
-          method: "GET",
-          headers: {
-            "Authorization": `Bearer ${data.token}`
-          }
-        });
-
-        if (adminCheck.ok) {
-          window.location.href = "admin.html"; // Admin dashboard
-        } else {
-          window.location.href = "dashboard.html"; // Regular user dashboard
-        }
+      // Redirect based on is_admin flag
+if (data.is_admin) {
+  window.location.href = "admin.html";
+} else {
+  window.location.href = "dashboard.html";
+}
 
       } catch (err) {
         console.error(err);
@@ -125,25 +118,19 @@
     });
 
     // Optional: Auto-check if already logged in and redirect accordingly
-    window.onload = () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
+ window.onload = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
 
-      fetch(`${API_URL}/admin/data`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        if (res.ok) {
-          window.location.href = "admin.html";
-        }
-      })
-      .catch(err => {
-        console.error("Admin check failed:", err);
-      });
-    };
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  const isAdmin = payload.role === "admin";
+
+  if (isAdmin) {
+    window.location.href = "admin.html";
+  } else {
+    window.location.href = "dashboard.html";
+  }
+};
   </script>
 </body>
 </html>
