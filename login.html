@@ -118,17 +118,29 @@ if (data.is_admin) {
     });
 
     // Optional: Auto-check if already logged in and redirect accordingly
- window.onload = () => {
+// Optional: Auto-check if already logged in and redirect accordingly
+window.onload = async () => {
   const token = localStorage.getItem("token");
   if (!token) return;
 
-  const payload = JSON.parse(atob(token.split('.')[1]));
-  const isAdmin = payload.role === "admin";
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const isExpired = payload.exp * 1000 < Date.now(); // Check token expiry
 
-  if (isAdmin) {
-    window.location.href = "admin.html";
-  } else {
-    window.location.href = "dashboard.html";
+    if (isExpired) {
+      localStorage.removeItem("token");
+      return;
+    }
+
+    // Redirect if still valid
+    if (payload.role === "admin") {
+      window.location.href = "admin.html";
+    } else {
+      window.location.href = "dashboard.html";
+    }
+  } catch (err) {
+    console.error("Token invalid:", err);
+    localStorage.removeItem("token"); // Clear corrupted token
   }
 };
   </script>
