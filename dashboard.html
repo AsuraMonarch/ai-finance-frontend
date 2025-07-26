@@ -276,6 +276,16 @@ if (!localStorage.getItem("token")) {
 }
 </script>
 <script>
+  window.onload = () => {
+    const role = localStorage.getItem("role");
+    if (role !== "user" && role !== "admin") {
+      alert("You must be logged in");
+      window.location.href = "signup.html";
+    }
+  };
+</script>
+
+<script>
   document.addEventListener("DOMContentLoaded", () => {
     document.querySelector('.btn[href="#login"]').addEventListener("click", (e) => {
       e.preventDefault(); // Prevent jump

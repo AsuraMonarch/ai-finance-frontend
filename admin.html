@@ -52,6 +52,15 @@
     </tbody>
   </table>
 </div>
+<script>
+  window.onload = () => {
+    const role = localStorage.getItem("role");
+    if (role !== "admin") {
+      alert("Access denied: Admins only");
+      window.location.href = "signup.html";
+    }
+  };
+</script>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
