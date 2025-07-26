@@ -1,12 +1,15 @@
 window.onload = () => {
   greetUser();
   renderQuickReplies();
+  checkAdminAccessOnLoad();
 };
 
+// ✅ Initial greeting message
 function greetUser() {
   appendBotMessage("👋 Hi! I'm your AI Finance Assistant. How can I help you today?");
 }
 
+// ✅ Quick reply buttons
 function renderQuickReplies() {
   const container = document.getElementById("quick-replies");
   const suggestions = ["How’s my budget?", "Show my spending", "Set a goal"];
@@ -20,12 +23,14 @@ function renderQuickReplies() {
   });
 }
 
+// ✅ Handle user input from button or manual input
 function handleUserInput(message) {
   appendUserMessage(message);
   showTypingIndicator();
   sendMessageToBot(message);
 }
 
+// ✅ Append user and bot messages to chat
 function appendUserMessage(text) {
   appendMessage(text, "user-message");
 }
@@ -43,6 +48,7 @@ function appendMessage(text, className) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// ✅ Typing indicator
 function showTypingIndicator() {
   const chatBox = document.getElementById("chat-box");
   const typing = document.createElement("div");
@@ -58,6 +64,7 @@ function hideTypingIndicator() {
   if (typing) typing.remove();
 }
 
+// ✅ Send message to backend
 async function sendMessageToBot(message) {
   try {
     const response = await fetch('https://ai-finance-backend-secure.onrender.com/chat', {
@@ -77,4 +84,50 @@ async function sendMessageToBot(message) {
     appendBotMessage("⚠️ Unable to connect. Please try again later.");
     console.error("Error sending message:", error);
   }
+}
+
+// ✅ Check admin access on load (used in login.html)
+function checkAdminAccessOnLoad() {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  fetch("https://ai-finance-backend-secure.onrender.com/admin/data", {
+    method: "GET",
+    headers: {
+      "Authorization": token
+    }
+  })
+  .then(res => {
+    if (res.ok) {
+      // ✅ Redirect to admin dashboard
+      window.location.href = "admin.html";
+    } else {
+      console.log("✅ Regular user logged in.");
+    }
+  })
+  .catch(err => {
+    console.error("Admin check failed:", err);
+  });
+}
+
+// ✅ Explicit admin access check (can be used in admin menu button)
+function checkAdminAccess() {
+  fetch("https://ai-finance-backend-secure.onrender.com/admin/data", {
+    method: "GET",
+    headers: {
+      "Authorization": localStorage.getItem("token")
+    }
+  })
+  .then(response => {
+    if (response.ok) {
+      // ✅ User is admin
+      window.location.href = "admin.html";
+    } else {
+      alert("❌ You are not authorized to access the admin dashboard.");
+    }
+  })
+  .catch(err => {
+    console.error("⚠️ Admin access error:", err);
+    alert("⚠️ Something went wrong while checking admin access.");
+  });
 }

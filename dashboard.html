@@ -184,6 +184,7 @@
         <li><a href="#contact">Contact</a></li>
         <li><a href="#" onclick="logout()">Logout</a></li>
       </ul>
+      <a href="admin.html" id="adminLink" style="display:none;">Admin Dashboard</a>
     </nav>
   </header>
 
@@ -324,6 +325,24 @@ if (!localStorage.getItem("token")) {
     localStorage.removeItem("token");
     window.location.href = "login.html";
   }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    fetch("http://localhost:5000/user/profile", {
+      headers: {
+        "Authorization": token
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.is_admin) {
+        document.getElementById("adminLink").style.display = "inline-block";
+      }
+    });
+  });
 </script>
 </body>
 </html>

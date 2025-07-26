@@ -91,8 +91,8 @@
       try {
         const res = await fetch(`${API_URL}/login`, {
           method: "POST",
-          headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ username: email, password })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: email, password })  // Change to "email" if your backend expects that key
         });
 
         if (!res.ok) {
@@ -104,14 +104,46 @@
         const data = await res.json();
         localStorage.setItem("token", data.token);
 
-        // ✅ Redirect to dashboard/home
-        window.location.href = "dashboard.html";
+        // Check if the user is an admin
+        const adminCheck = await fetch(`${API_URL}/admin/data`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${data.token}`
+          }
+        });
+
+        if (adminCheck.ok) {
+          window.location.href = "admin.html"; // Admin dashboard
+        } else {
+          window.location.href = "dashboard.html"; // Regular user dashboard
+        }
 
       } catch (err) {
         console.error(err);
         alert("Error logging in. Please try again.");
       }
     });
+
+    // Optional: Auto-check if already logged in and redirect accordingly
+    window.onload = () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      fetch(`${API_URL}/admin/data`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      })
+      .then(res => {
+        if (res.ok) {
+          window.location.href = "admin.html";
+        }
+      })
+      .catch(err => {
+        console.error("Admin check failed:", err);
+      });
+    };
   </script>
 </body>
 </html>
